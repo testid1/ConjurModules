@@ -1,1 +1,33 @@
 
+name: Conjur OIDC Auth
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  get-oidc-token:
+    runs-on:  ubuntu-latest
+    steps:
+      - name: Request JWT from GitHub
+        id: jwt
+        run:  |
+          echo "Requesting OIDC token......"
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            -H "Accept: application/json" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL")
+          echo $RESPONSE | jq .
+          echo "::set-output name=jwt::$(echo $RESPONSE | jq -r .value)"
+      - name: Decode JWT (for debugging)
+        run: |
+          echo '${{ steps.jwt.outputs.jwt }}' | cut -d '.' -f2 | base64 -d | jq
+        
+  #authenticate:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    ...
+
