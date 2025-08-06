@@ -40,7 +40,7 @@ jobs:
       - name: Retreive Secret
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
-          SESSION_TOKEN = ${{ steps.get_token.outputs.token }}
+          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
           SECRET=$(curl -s -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
             "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
             #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
