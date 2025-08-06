@@ -22,8 +22,10 @@ jobs:
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             -H "Accept: application/json" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL")
-          echo $RESPONSE | jq .
-          echo "::set-output name=jwt::$(echo $RESPONSE | jq -r .value)"
+          #echo $RESPONSE | jq .
+          #echo "::set-output name=jwt::$(echo $RESPONSE | jq -r .value)"
+          JWT=$(echo "$RESPONSE" | jq -r .value)
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
           
       - name: Decode JWT (for debugging)
         run: |
@@ -37,19 +39,21 @@ jobs:
           SESSION_TOKEN=$(curl -s -X POST "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "jwt=${{ steps.get_token.outputs.token }}")
+          #echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
+          echo "::add-mask::$SESSION_TOKEN"
           echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
           
       - name: Retreive Secret
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
           #SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
-          SECRET=$(curl -s -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
+          SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
             "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
             #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
             #"$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
-          SECRET_VALUE=$(echo "$SECRET" | head -n1)
-          echo "DB Password: $SECRET_VALUE"
-          
+          #SECRET_VALUE=$(echo "$SECRET" | head -n1)
+          #echo "DB Password: $SECRET_VALUE"
+          echo "DB Password: $SECRET"
   #authenticate:
   #  runs-on: ubuntu-latest
   #  steps:
