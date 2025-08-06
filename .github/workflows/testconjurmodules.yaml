@@ -18,7 +18,7 @@ jobs:
         run:  |
           echo "Requesting OIDC token......"
           RESPONSE=$(curl -s -X POST -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" -H "Accept: application/json" "$ACTIONS_ID_TOKEN_REQUEST_URL")
-          JWT=$(echo "Response= $RESPONSE" | jq -r .value)
+          JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
           
       - name: Decode JWT (for debugging)
