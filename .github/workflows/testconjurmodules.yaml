@@ -11,8 +11,8 @@ permissions:
 jobs:
   get-oidc-token:
     runs-on:  ubuntu-latest
-    env:
-      SESSION_TOKEN: ""
+    #env:
+    #  SESSION_TOKEN: ""
     steps:
       - name: Request JWT from GitHub
         id: jwt
