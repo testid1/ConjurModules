@@ -11,6 +11,8 @@ permissions:
 jobs:
   get-oidc-token:
     runs-on:  ubuntu-latest
+    env:
+      SESSION_TOKEN: ""
     steps:
       - name: Request JWT from GitHub
         id: jwt
@@ -32,15 +34,15 @@ jobs:
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
           #HOST_ID="repo:your-org/your-repo:environment:prod"
-          RESPONSE=$(curl -s -X POST "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
+          SESSION_TOKEN=$(curl -s -X POST "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "jwt=${{ steps.get_token.outputs.token }}")
-          echo "session_token=$RESPONSE" >> $GITHUB_OUTPUT
+          echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
           
       - name: Retreive Secret
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
-          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
+          #SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
           SECRET=$(curl -s -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
             "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
             #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
