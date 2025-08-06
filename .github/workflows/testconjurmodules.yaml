@@ -30,7 +30,7 @@ jobs:
       - name: Authenticate to Conjur
         id:  conjur_auth
         run:  |
-          CONJUR_URL="https://pwclab.secretsmanager.cyberark.cloud/api"
+          CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
           #HOST_ID="repo:your-org/your-repo:environment:prod"
           RESPONSE=$(curl -s -X POST "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
             -H "Content-Type: application/x-www-form-urlencoded" \
