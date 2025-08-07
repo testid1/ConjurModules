@@ -37,12 +37,10 @@ jobs:
           echo "$SESSION_TOKEN" > session_token.txt
           echo "Session token file written with $(wc -c < session_token.txt) bytes"
 
-      - name: Debug session token
+      - name: List and verify token file before upload
         run: |
+          ls -l session_token.txt
           cat session_token.txt
-      
-
-          echo "$SESSION_TOKEN" > session_token.txt
  
       - name: Upload raw st as an artifact
         uses: actions/upload-artifact@v4
