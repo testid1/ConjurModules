@@ -19,25 +19,27 @@ jobs:
         id: jwt
         run: |
           RESPONSE=$(curl -s -X POST \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            -H "Accept: application/json" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL")
-          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          -H "Accept: application/json" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL")
+           echo "response=$RESPONSE" >> $GITHUB_OUTPUT
           JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
-          
-      - name: Decode JWT (for debugging)
-        run: |
-          echo '${{ steps.jwt.outputs.jwt }}' | cut -d '.' -f2 | base64 -d | jq
-          
+
       - name: Authenticate to Conjur
-        id:  conjur_auth
-        run:  |
+        id: conjur_auth
+        run: |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
           SESSION_TOKEN=$(curl -s -X POST "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "jwt=${{ steps.get_token.outputs.token }}")
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -d "jwt=${{ steps.jwt.outputs.jwt }}")
           echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
+          echo "$SESSION_TOKEN" > session_token.txt
+
+      - name: Debug session token
+        run: |
+          cat session_token.txt
+      
 
           echo "$SESSION_TOKEN" > session_token.txt
  
