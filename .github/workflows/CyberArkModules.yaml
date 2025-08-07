@@ -19,9 +19,8 @@ jobs:
         run: |
           #CYBR_URL = ""
           RESPONSE=$(curl -sk -X POST "https://aay4294.id.cyberark.cloud/oauth2/platformtoken" \
-          -H "Content-Type: application/json" \
-          -d "grant_type='client_credentials'&client_id=${{secrets.CYBR_USERNAME}}&client_secret=${{secrets.CYBR_PASSWORD}}")
-            #-d "grant_type:client_credentials","{\"client_id\":\"${{ secrets.CYBR_USERNAME }}\",\"client_secret\":\"${{ secrets.CYBR_PASSWORD }}\"}")
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -d "grant_type=client_credentials&client_id=${{ secrets.CYBR_USERNAME }}&client_secret=${{ secrets.CYBR_PASSWORD }}&scope=all")
           
           AUTH_TOKEN=$(echo "$RESPONSE" | tr -d '"')
           #echo "::add-mask::$AUTH_TOKEN"
