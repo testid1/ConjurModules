@@ -50,7 +50,6 @@ jobs:
             "description": "Safe created via GitHub Actions using CyberArk API v2",
             "managingCPM": "",
             "numberOfVersionsRetention": 5,
-            "numberOfDaysRetention": 7,
             "autoPurgeEnabled": true,
             "olacEnabled": false
           }
