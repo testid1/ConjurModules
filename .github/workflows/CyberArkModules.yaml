@@ -28,16 +28,16 @@ jobs:
           #echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
           #echo "Session token file written with $(wc -c < AUTH_TOKEN.txt) bytes"
 
-      - name: List and verify token file before upload
-        run: |
-          ls -l AUTH_TOKEN.txt
-          cat AUTH_TOKEN.txt
+      #- name: List and verify token file before upload
+      #  run: |
+      #    ls -l AUTH_TOKEN.txt
+      #    cat AUTH_TOKEN.txt
       
-      - name: Upload raw st as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw-st
-          path: AUTH_TOKEN.txt
+      #- name: Upload raw st as an artifact
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: raw-st
+      #    path: AUTH_TOKEN.txt
 
       - name: Create Safe
         run: |
