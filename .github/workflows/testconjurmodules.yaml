@@ -51,15 +51,18 @@ jobs:
       - name: Retreive Secret
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
-          #SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
-          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
-          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
-          #SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
-          #"$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
-            #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
-          #SECRET_VALUE=$(echo "$SECRET" | head -n1)
-          #echo "DB Password: $SECRET_VALUE"
+          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
+          SECRET=$(curl -s -H "Authorization: Token token=\"${SESSION_TOKEN}\"" -X GET "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")  
           echo "DB Password: $SECRET"
+#          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
+#          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
+#          SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
+#          "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
+#            "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
+#          #SECRET_VALUE=$(echo "$SECRET" | head -n1)
+#          #echo "DB Password: $SECRET_VALUE"
+
+          
 #  authenticate:
 #    runs-on: ubuntu-latest
 #    steps:
