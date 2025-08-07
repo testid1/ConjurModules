@@ -21,6 +21,13 @@ jobs:
           AUTH_TOKEN=$(echo "$RESPONSE" | tr -d '"')
           echo "::add-mask::$AUTH_TOKEN"
           echo "auth_token=$AUTH_TOKEN" >> $GITHUB_OUTPUT
+          echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
+          echo "Session token file written with $(wc -c < session_token.txt) bytes"
+
+      - name: List and verify token file before upload
+        run: |
+          ls -l AUTH_TOKEN.txt
+          cat AUTH_TOKEN.txt
 
       #- name: Create Safe
       #  run: |
