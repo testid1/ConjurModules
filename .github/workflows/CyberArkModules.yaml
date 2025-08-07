@@ -39,21 +39,20 @@ jobs:
           name: raw-st
           path: AUTH_TOKEN.txt
 
-      #- name: Create Safe
-      #  run: |
-      #    SAFE_NAME="GitHubSafe-$(date +%s)"
+      - name: Create Safe
+        run: |
+          SAFE_NAME="GitHubSafe-4"
 
-       #   curl -sk -X POST "${{ secrets.CYBR_URL }}/WebServices/PIMServices.svc/Safes" \
-        #    -H "Authorization: ${{ steps.login.outputs.auth_token }}" \
-         #   -H "Content-Type: application/json" \
-          #  -d "{
-           #       \"safe\": {
-            #        \"SafeName\": \"$SAFE_NAME\",
-             #       \"Description\": \"Created from GitHub Actions\",
-              #      \"ManagingCPM\": \"PasswordManager\",
-               #     \"NumberOfVersionsRetention\": 5,
-                #    \"NumberOfDaysRetention\": 7
-                 # }
-               # }"
+          curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/" \
+            -H "Authorization: ${{ steps.login.outputs.auth_token }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+                  \"safe\": {
+                    \"safeName\": \"$SAFE_NAME\",
+                    \"Description\": \"Created from GitHub Actions\",
+                    \"ManagingCPM\": \"\",
+                    \"NumberOfDaysRetention\": 7
+                  }
+                }"
 
-         # echo "✅ Safe '$SAFE_NAME' created in CyberArk"
+          echo "✅ Safe '$SAFE_NAME' created in CyberArk"
