@@ -56,7 +56,7 @@ jobs:
         run: |
           set -x
           echo "Running till here"
-          VAR="data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress"
+          VAR="data/vault/conjurtest/conjurtest/address"
           SECRET_VALUE=$(curl -s -H "Authorization: Token token=\"${SESSION_TOKEN}\"" -X GET "$CONJUR_URL/secrets/conjur/variable/${VAR}")
           echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
           echo "$SECRET_VALUE" > secret_value.txt
