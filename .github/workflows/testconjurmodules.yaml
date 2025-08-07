@@ -47,14 +47,32 @@ jobs:
         with:
           name: raw-st
           path: session_token.txt
-          
-      - name: Retreive Secret
-        run:  |
-          CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
-          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
-          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
-          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
-          echo "DB Password: $SECRET"
+
+      - name: Retrieve to Conjur
+        shell: bash
+        env:
+          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
+          CONJUR_ACCOUNT: "conjur"
+        run: |
+          set -x
+          echo "Running till here"
+          VAR="data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress"
+          SECRET_VALUE=$(curl -s -H "Authorization: Token token=\"${SESSION_TOKEN}\"" -X GET "$CONJUR_URL/secrets/conjur/variable/${VAR}")
+          echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
+          echo "$SECRET_VALUE" > secret_value.txt
+
+      - name: Upload raw secret as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-secret
+          path: secret.txt
+ #     - name: Retreive Secret
+ #       run:  |
+ #         CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
+ #         SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
+ #         SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
+ #         "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
+ #         echo "DB Password: $SECRET"
  #         #SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
  #         #"$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
  #           #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
