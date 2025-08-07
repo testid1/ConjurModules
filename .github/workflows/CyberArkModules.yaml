@@ -22,11 +22,11 @@ jobs:
           -H "Content-Type: application/x-www-form-urlencoded" \
           -d "grant_type=client_credentials&client_id=${{ secrets.CYBR_USERNAME }}&client_secret=${{ secrets.CYBR_PASSWORD }}&scope=all")
           
-          AUTH_TOKEN=$(echo "$RESPONSE" | tr -d '"')
-          #echo "::add-mask::$AUTH_TOKEN"
+          AUTH_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+          echo "::add-mask::$AUTH_TOKEN"
           echo "auth_token=$AUTH_TOKEN" >> $GITHUB_OUTPUT
-          echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
-          echo "Session token file written with $(wc -c < AUTH_TOKEN.txt) bytes"
+          #echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
+          #echo "Session token file written with $(wc -c < AUTH_TOKEN.txt) bytes"
 
       - name: List and verify token file before upload
         run: |
