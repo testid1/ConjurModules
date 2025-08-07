@@ -13,29 +13,30 @@ jobs:
       - name: Authenticate to CyberArk
         id: login
         run: |
-          RESPONSE=$(curl -sk -X POST "${{ secrets.CYBR_URL }}/WebServices/auth/Cyberark/CyberArkAuthenticationService.svc/Logon" \
+          #CYBR_URL = ""
+          RESPONSE=$(curl -sk -X POST "https://aay4294.id.cyberark.cloud/oauth2/platformtoken" \
             -H "Content-Type: application/json" \
-            -d "{\"username\":\"${{ secrets.CYBR_USERNAME }}\",\"password\":\"${{ secrets.CYBR_PASSWORD }}\"}")
+            -d "{\"grant_type\":\"client_credentials","{\"client_id\":\"${{ secrets.CYBR_USERNAME }}\",\"client_secret\":\"${{ secrets.CYBR_PASSWORD }}\"}")
           
           AUTH_TOKEN=$(echo "$RESPONSE" | tr -d '"')
           echo "::add-mask::$AUTH_TOKEN"
           echo "auth_token=$AUTH_TOKEN" >> $GITHUB_OUTPUT
 
-      - name: Create Safe
-        run: |
-          SAFE_NAME="GitHubSafe-$(date +%s)"
+      #- name: Create Safe
+      #  run: |
+      #    SAFE_NAME="GitHubSafe-$(date +%s)"
 
-          curl -sk -X POST "${{ secrets.CYBR_URL }}/WebServices/PIMServices.svc/Safes" \
-            -H "Authorization: ${{ steps.login.outputs.auth_token }}" \
-            -H "Content-Type: application/json" \
-            -d "{
-                  \"safe\": {
-                    \"SafeName\": \"$SAFE_NAME\",
-                    \"Description\": \"Created from GitHub Actions\",
-                    \"ManagingCPM\": \"PasswordManager\",
-                    \"NumberOfVersionsRetention\": 5,
-                    \"NumberOfDaysRetention\": 7
-                  }
-                }"
+       #   curl -sk -X POST "${{ secrets.CYBR_URL }}/WebServices/PIMServices.svc/Safes" \
+        #    -H "Authorization: ${{ steps.login.outputs.auth_token }}" \
+         #   -H "Content-Type: application/json" \
+          #  -d "{
+           #       \"safe\": {
+            #        \"SafeName\": \"$SAFE_NAME\",
+             #       \"Description\": \"Created from GitHub Actions\",
+              #      \"ManagingCPM\": \"PasswordManager\",
+               #     \"NumberOfVersionsRetention\": 5,
+                #    \"NumberOfDaysRetention\": 7
+                 # }
+               # }"
 
-          echo "✅ Safe '$SAFE_NAME' created in CyberArk"
+         # echo "✅ Safe '$SAFE_NAME' created in CyberArk"
