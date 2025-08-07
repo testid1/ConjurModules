@@ -39,7 +39,7 @@ jobs:
       #    name: raw-st
       #    path: AUTH_TOKEN.txt
 
-      - name: Create Safe
+      - name: Create_Safe
         run: |
           SAFE_NAME="GitHubSafe-4"
           echo "${{ steps.login.outputs.auth_token }}" | sha256sum
@@ -61,4 +61,11 @@ jobs:
             -d "$CREATE_PAYLOAD")
 
           echo "Safe onboarding response: $Resp"
+          echo "response=$Resp" >> $GITHUB_OUTPUT
+          if: contains($Resp, 'safeNumber')
+          run: echo "✅ Safe is created."
+          
+      #- name: Check if Safe is created
+      #  if: contains(steps.Create_Safe.outputs.response, 'safeNumber')
+      #  run: echo "✅ Safe is created."
           #echo "✅ Safe '$SAFE_NAME' created in CyberArk"
