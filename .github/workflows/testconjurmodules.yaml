@@ -52,7 +52,7 @@ jobs:
         run:  |
           CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
           SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
-          SECRET=$(curl -s -H "Authorization: Token token=\"${SESSION_TOKEN}\"" -X GET "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")  
+          SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" -X GET "$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")  
           echo "DB Password: $SECRET"
 #          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
 #          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
