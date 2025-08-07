@@ -3,6 +3,10 @@ name: Create CyberArk Safe
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   create-safe:
     runs-on: ubuntu-latest
