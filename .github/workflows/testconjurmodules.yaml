@@ -35,6 +35,7 @@ jobs:
           -d "jwt=${{ steps.jwt.outputs.jwt }}")
           echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
           echo "$SESSION_TOKEN" > session_token.txt
+          echo "Session token file written with $(wc -c < session_token.txt) bytes"
 
       - name: Debug session token
         run: |
