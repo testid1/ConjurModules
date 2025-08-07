@@ -36,10 +36,6 @@ jobs:
           echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
           echo "$SESSION_TOKEN" > session_token.txt
           echo "Session token file written with $(wc -c < session_token.txt) bytes"
-          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
-          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
-          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
-          echo "DB Password: $SECRET"
 
       - name: List and verify token file before upload
         run: |
@@ -52,13 +48,13 @@ jobs:
           name: raw-st
           path: session_token.txt
           
- #     - name: Retreive Secret
- #       run:  |
- #         CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
- #         SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
- #         SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
- #         "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
- #         echo "DB Password: $SECRET"
+      - name: Retreive Secret
+        run:  |
+          CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
+          SESSION_TOKEN = "${{ steps.get_token.outputs.token }}"
+          SECRET=$(curl -s -k --header "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
+          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
+          echo "DB Password: $SECRET"
  #         #SECRET=$(curl -s -H "Authorization: Token token=\"${{ steps.conjur_auth.outputs.session_token }}\"" \
  #         #"$CONJUR_URL/secrets/conjur/variable/data/vault/conjurtest/conjurtest/password")
  #           #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Faddress")
