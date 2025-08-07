@@ -22,7 +22,7 @@ jobs:
           #echo "::add-mask::$AUTH_TOKEN"
           #echo "auth_token=$AUTH_TOKEN" >> $GITHUB_OUTPUT
           echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
-          echo "Session token file written with $(wc -c < session_token.txt) bytes"
+          echo "Session token file written with $(wc -c < AUTH_TOKEN.txt) bytes"
 
       - name: List and verify token file before upload
         run: |
