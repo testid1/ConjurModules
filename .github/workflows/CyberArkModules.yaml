@@ -56,10 +56,10 @@ jobs:
           }
           EOF)
 
-          Resp=curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/" \
+          Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/" \
             -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
             -H "Content-Type: application/json" \
-            -d "$CREATE_PAYLOAD"
+            -d "$CREATE_PAYLOAD")
 
           echo "Safe onboarding response: $Resp"
           #echo "✅ Safe '$SAFE_NAME' created in CyberArk"
