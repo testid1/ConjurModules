@@ -62,8 +62,8 @@ jobs:
 
           echo "Safe onboarding response: $Resp"
           echo "response=$Resp" >> $GITHUB_OUTPUT
-          if: contains($Resp, 'safeNumber')
-          run: echo "✅ Safe is created."
+          #if: contains($Resp, 'safeNumber')
+          #run: echo "✅ Safe is created."
           
       #- name: Check if Safe is created
       #  if: contains(steps.Create_Safe.outputs.response, 'safeNumber')
