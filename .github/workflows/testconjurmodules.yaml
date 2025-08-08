@@ -68,7 +68,7 @@ jobs:
           echo "Running till here"
           SESSION_TOKEN=$(cat session_token.txt)
           if [ -z "$SESSION_TOKEN" ]; then
-            echo "❌ Error: SESSION_TOKEN is empty"
+            echo "Error: SESSION_TOKEN is empty"
             exit 1
           fi
           VAR="data/vault/conjurtest/conjurtest/address"
