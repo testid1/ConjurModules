@@ -1,3 +1,4 @@
+
 name: Conjur OIDC Auth
 
 on:
@@ -27,6 +28,7 @@ jobs:
 
           JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
+          echo "jwt token:$JWT"
 
 
       - name: Authenticate to Conjur
