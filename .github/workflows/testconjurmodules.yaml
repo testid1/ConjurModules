@@ -72,7 +72,8 @@ jobs:
         run: |
           set -x
           echo "Running till here"
-          SESSION_TOKEN=$(cat session_token.txt)
+          SESSION_TOKEN=${{ steps.conjur_auth.outputs.session_token }}
+          #$(cat session_token.txt)
           if [ -z "$SESSION_TOKEN" ]; then
             echo "Error: SESSION_TOKEN is empty"
             exit 1
