@@ -18,13 +18,16 @@ jobs:
       - name: Request JWT from GitHub
         id: jwt
         run: |
-          RESPONSE=$(curl -s -X POST 
+          RESPONSE=$(curl -s -X POST \
           -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
           -H "Accept: application/json" \
           "$ACTIONS_ID_TOKEN_REQUEST_URL")
-           echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+
+          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+
           JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
+
 
       - name: Authenticate to Conjur
         id: conjur_auth
