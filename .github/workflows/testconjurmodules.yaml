@@ -29,6 +29,8 @@ jobs:
           JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
           echo "jwt token:$JWT"
+          echo "JWT length: ${#JWT}"
+
 
 
       - name: Authenticate to Conjur
