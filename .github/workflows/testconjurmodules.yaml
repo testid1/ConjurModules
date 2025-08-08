@@ -1,5 +1,5 @@
 
-name: Conjur OIDC Auth
+name: Conjur-PasswordRetreival
 
 on:
   workflow_call:
