@@ -22,7 +22,7 @@ jobs:
           -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
           -H "Accept: application/json" \
           "$ACTIONS_ID_TOKEN_REQUEST_URL")
-           echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
           JWT=$(echo "$RESPONSE" | jq -r .value)
           echo "jwt=$JWT" >> $GITHUB_OUTPUT
 
