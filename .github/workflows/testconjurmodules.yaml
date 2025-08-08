@@ -3,6 +3,11 @@ name: Conjur-PasswordRetreival
 
 on:
   workflow_call:
+    inputs:
+      secretpath:
+        description: "Target Variable"
+        required: true
+        type: string
   #workflow_dispatch:
 
 permissions:
@@ -72,9 +77,10 @@ jobs:
             echo "Error: SESSION_TOKEN is empty"
             exit 1
           fi
-          VAR="data/vault/conjurtest/conjurtest/address"
+          VAR=${{ inputs.secretpath }}
           SECRET_VALUE=$(curl -s -k --header "Authorization: Token token=\"$SESSION_TOKEN\"" \
-          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
+          "$CONJUR_URL/secrets/conjur/variable/$VAR")
+          #"$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
           echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
           echo "$SECRET_VALUE" > secret_value.txt
           echo "Secret:$SECRET_VALUE"
