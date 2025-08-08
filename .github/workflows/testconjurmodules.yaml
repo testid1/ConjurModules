@@ -64,7 +64,7 @@ jobs:
           name: raw-st
           path: session_token.txt
 
-      - name: Retrieve to Conjur
+      - name: Retrieve Secret
         shell: bash
         env:
           CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
