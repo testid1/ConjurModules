@@ -41,6 +41,7 @@ jobs:
           echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
           echo "$SESSION_TOKEN" > session_token.txt
           echo "Session token file written with $(wc -c < session_token.txt) bytes"
+          echo "Session token:$SESSION_TOKEN"
 
       - name: List and verify token file before upload
         run: |
@@ -65,6 +66,7 @@ jobs:
           SECRET_VALUE=$(curl -s -k -H "Authorization: Token token=\"${SESSION_TOKEN}\"" "$CONJUR_URL/secrets/conjur/variable/${VAR}")
           echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
           echo "$SECRET_VALUE" > secret_value.txt
+          echo "Secret:$SECRET_VALUE"
 
       - name: Upload raw secret as an artifact
         uses: actions/upload-artifact@v4
