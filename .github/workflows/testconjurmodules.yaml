@@ -18,7 +18,7 @@ jobs:
       - name: Request JWT from GitHub
         id: jwt
         run: |
-          RESPONSE=$(curl -s -X POST \
+          RESPONSE=$(curl -s -X POST 
           -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
           -H "Accept: application/json" \
           "$ACTIONS_ID_TOKEN_REQUEST_URL")
