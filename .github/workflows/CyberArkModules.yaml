@@ -61,7 +61,7 @@ jobs:
 
           CREATE_PAYLOAD=$(cat <<EOF
           {
-            "memberName":"JohnDoe",
+            "memberName":"saswat.nayak@pwclab.com",
             "searchIn": "PwC Cloud Directory",
             "membershipExpirationDate":"",
             "permissions":
