@@ -28,16 +28,6 @@ jobs:
           #echo "$AUTH_TOKEN" > AUTH_TOKEN.txt
           #echo "Session token file written with $(wc -c < AUTH_TOKEN.txt) bytes"
 
-      #- name: List and verify token file before upload
-      #  run: |
-      #    ls -l AUTH_TOKEN.txt
-      #    cat AUTH_TOKEN.txt
-      
-      #- name: Upload raw st as an artifact
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: raw-st
-      #    path: AUTH_TOKEN.txt
 
       - name: Create_Safe
         run: |
@@ -55,17 +45,63 @@ jobs:
           }
           EOF)
 
-          Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/" \
+          #Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/" \
+          #  -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
+          #  -H "Content-Type: application/json" \
+          #  -d "$CREATE_PAYLOAD")
+
+          #echo "Safe onboarding response: $Resp"
+          #echo "response=$Resp" >> $GITHUB_OUTPUT
+          
+
+      - name: Add_membership
+        run: |
+          SAFE_NAME="GitHubSafe-7"
+          echo "${{ steps.login.outputs.auth_token }}" | sha256sum
+
+          CREATE_PAYLOAD=$(cat <<EOF
+          {
+            "memberName":"JohnDoe",
+            "searchIn": "PwC Cloud Directory",
+            "membershipExpirationDate":"",
+            "permissions":
+            {
+              "useAccounts": true,
+              "retrieveAccounts": true,
+              "listAccounts": true,
+              "addAccounts": true,
+              "updateAccountContent": true,
+              "updateAccountProperties": true,
+              "initiateCPMAccountManagementOperations": true,
+              "specifyNextAccountContent": true,
+              "renameAccounts": true,
+              "deleteAccounts": true,
+              "unlockAccounts": true,
+              "manageSafe": true,
+              "manageSafeMembers": true,
+              "backupSafe": false,
+              "viewAuditLog": true,
+              "viewSafeMembers": true,
+              "accessWithoutConfirmation": true,
+              "createFolders": true,
+              "deleteFolders": true,
+              "moveAccountsAndFolders": true,
+              "requestsAuthorizationLevel1": false,
+              "requestsAuthorizationLevel2": false
+            },
+            "MemberType": "User"
+          }
+          EOF)
+
+          Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/$SAFE_NAME/Members/" \
             -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
             -H "Content-Type: application/json" \
             -d "$CREATE_PAYLOAD")
 
-          echo "Safe onboarding response: $Resp"
+          echo "Adding safe membership: $Resp"
           echo "response=$Resp" >> $GITHUB_OUTPUT
-          #if: contains($Resp, 'safeNumber')
-          #run: echo "✅ Safe is created."
-          
-      #- name: Check if Safe is created
-      #  if: contains(steps.Create_Safe.outputs.response, 'safeNumber')
-      #  run: echo "✅ Safe is created."
-          #echo "✅ Safe '$SAFE_NAME' created in CyberArk"
+          if: contains($Resp, 'safeNumber'); then
+            echo "Error: Safemembership adding failed with error : $Resp"
+            #exit 1
+          fi
+          #run: echo "✅ Safe is created."   
