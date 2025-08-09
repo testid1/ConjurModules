@@ -31,7 +31,7 @@ jobs:
 
       - name: Create_Safe
         run: |
-          SAFE_NAME="GitHubSafe-7"
+          SAFE_NAME="GitHubSafe-6"
           echo "${{ steps.login.outputs.auth_token }}" | sha256sum
 
           CREATE_PAYLOAD=$(cat <<EOF
