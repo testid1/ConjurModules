@@ -100,8 +100,8 @@ jobs:
 
           echo "Adding safe membership: $Resp"
           echo "response=$Resp" >> $GITHUB_OUTPUT
-          if: contains($Resp, 'safeNumber'); then
-            echo "Error: Safemembership adding failed with error : $Resp"
-            #exit 1
-          fi
+          #if: contains($Resp, 'safeNumber'); then
+          #  echo "Error: Safemembership adding failed with error : $Resp"
+          #  #exit 1
+          #fi
           #run: echo "✅ Safe is created."   
