@@ -119,7 +119,7 @@ jobs:
             "address": "abc.def.com",
             "userName": "abc.def.com",
             "platformId": "GitHubTest",
-            "safeName": $SAFE_NAME,
+            "safeName": "$SAFE_NAME",
             "secretType": "key",
             "secret": "heyo",
             "platformAccountProperties": {},
