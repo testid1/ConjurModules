@@ -93,15 +93,54 @@ jobs:
           }
           EOF)
 
-          Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/$SAFE_NAME/Members/" \
+          #Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/$SAFE_NAME/Members/" \
             -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
             -H "Content-Type: application/json" \
             -d "$CREATE_PAYLOAD")
 
-          echo "Adding safe membership: $Resp"
-          echo "response=$Resp" >> $GITHUB_OUTPUT
+          #echo "Adding safe membership: $Resp"
+          #echo "response=$Resp" >> $GITHUB_OUTPUT
+          #we can remove below lines from this function
           #if: contains($Resp, 'safeNumber'); then
           #  echo "Error: Safemembership adding failed with error : $Resp"
           #  #exit 1
           #fi
           #run: echo "✅ Safe is created."   
+
+
+      - name: Add_secret
+        run: |
+          SAFE_NAME="GitHubSafe-6"
+          echo "${{ steps.login.outputs.auth_token }}" | sha256sum
+
+          CREATE_PAYLOAD=$(cat <<EOF
+          {
+            "name": "string",
+            "address": "string",
+            "userName": "string",
+            "platformId": "string",
+            "safeName": "string",
+            "secretType": "key",
+            "secret": "string",
+            "platformAccountProperties": {},
+            "secretManagement": 
+            {
+              "automaticManagementEnabled": true,
+              "manualManagementReason": "string"
+            },
+            "remoteMachinesAccess": 
+            {
+              "remoteMachines": "string",
+              "accessRestrictedToRemoteMachines": true
+            }
+}
+          EOF)
+
+          #Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Accounts/" \
+          #  -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
+          #  -H "Content-Type: application/json" \
+          #  -d "$CREATE_PAYLOAD")
+
+          #echo "Safe onboarding response: $Resp"
+          #echo "response=$Resp" >> $GITHUB_OUTPUT
+          
