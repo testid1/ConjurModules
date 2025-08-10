@@ -125,13 +125,7 @@ jobs:
             "platformAccountProperties": {},
             "secretManagement": 
             {
-              "automaticManagementEnabled": true,
-              #"manualManagementReason": "string"
-            },
-            "remoteMachinesAccess": 
-            {
-              #"remoteMachines": "string",
-              #"accessRestrictedToRemoteMachines": true
+              "automaticManagementEnabled": true
             }
           }
           EOF)
