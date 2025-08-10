@@ -94,9 +94,9 @@ jobs:
           EOF)
 
           #Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/$SAFE_NAME/Members/" \
-            -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
-            -H "Content-Type: application/json" \
-            -d "$CREATE_PAYLOAD")
+          #  -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
+          #  -H "Content-Type: application/json" \
+          #  -d "$CREATE_PAYLOAD")
 
           #echo "Adding safe membership: $Resp"
           #echo "response=$Resp" >> $GITHUB_OUTPUT
@@ -115,32 +115,32 @@ jobs:
 
           CREATE_PAYLOAD=$(cat <<EOF
           {
-            "name": "string",
-            "address": "string",
-            "userName": "string",
-            "platformId": "string",
-            "safeName": "string",
+            "name": "test-account01",
+            "address": "abc.def.com",
+            "userName": "abc.def.com",
+            "platformId": "GitHubTest",
+            "safeName": $SAFE_NAME,
             "secretType": "key",
-            "secret": "string",
+            "secret": "heyo",
             "platformAccountProperties": {},
             "secretManagement": 
             {
               "automaticManagementEnabled": true,
-              "manualManagementReason": "string"
+              #"manualManagementReason": "string"
             },
             "remoteMachinesAccess": 
             {
-              "remoteMachines": "string",
-              "accessRestrictedToRemoteMachines": true
+              #"remoteMachines": "string",
+              #"accessRestrictedToRemoteMachines": true
             }
-}
+          }
           EOF)
 
-          #Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Accounts/" \
-          #  -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
-          #  -H "Content-Type: application/json" \
-          #  -d "$CREATE_PAYLOAD")
+          Resp=$(curl -sk -X POST "https://pwclab.privilegecloud.cyberark.cloud/PasswordVault/API/Accounts/" \
+            -H "Authorization: Bearer ${{ steps.login.outputs.auth_token }}" \
+            -H "Content-Type: application/json" \
+            -d "$CREATE_PAYLOAD")
 
-          #echo "Safe onboarding response: $Resp"
-          #echo "response=$Resp" >> $GITHUB_OUTPUT
+          echo "Safe onboarding response: $Resp"
+          echo "response=$Resp" >> $GITHUB_OUTPUT
           
