@@ -57,7 +57,7 @@ jobs:
       - name: Onboard-Policy
         shell: bash
         env:
-          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/"
+          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
           CONJUR_ACCOUNT: "conjur"
         run: |
           set -x
