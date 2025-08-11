@@ -70,7 +70,7 @@ jobs:
           fi
           
           Onboard_policy=$(curl -s -k -X PATCH \
-          "$CONJUR_URL/policies/conjur/policy/conjur/authn-jwt" \
+          "$CONJUR_URL/policies/conjur/policy/conjur" \
           -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
           -H "Content-Type: application/json" \
           --data-binary "conjur-policies/GitwithJWT5.yml" )
