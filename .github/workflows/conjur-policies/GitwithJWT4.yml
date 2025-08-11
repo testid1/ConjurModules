@@ -1,0 +1,12 @@
+- !policy
+  id: GitwithJWT4
+  body:
+    - !webservice
+    - !variable
+      id: public-keys
+    - !variable
+      id: issuer
+    - !variable
+      id: token-app-property
+    - !variable
+      id: identity-claim
