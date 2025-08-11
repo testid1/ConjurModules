@@ -57,7 +57,7 @@ jobs:
       - name: Onboard-Policy
         shell: bash
         env:
-          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
+          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/"
           CONJUR_ACCOUNT: "conjur"
         run: |
           set -x
@@ -73,7 +73,7 @@ jobs:
           "$CONJUR_URL/policies/conjur/policy/conjur/authn-jwt" \
           -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
           -H "Content-Type: application/json" \
-          --data-binary "conjur-policies/GitwithJWT4.yml" )
+          --data-binary "conjur-policies/GitwithJWT5.yml" )
         
           echo "resp=$Onboard_policy" >> $GITHUB_OUTPUT
           echo $Onboard_policy" > secret_value.txt
