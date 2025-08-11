@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  get-oidc-token:
+  conjur-onboarding:
     runs-on: ubuntu-latest
 
     env:
@@ -70,7 +70,7 @@ jobs:
           fi
           
           Onboard_policy=$(curl -s -k -X PATCH \
-          "$CONJUR_URL/policies/conjur/policy/authn-jwt/" \
+          "$CONJUR_URL/policies/conjur/policy/conjur/authn-jwt" \
           -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
           -H "Content-Type: application/json" \
           --data-binary "conjur-policies/GitwithJWT4.yml" )
