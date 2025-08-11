@@ -1,5 +1,5 @@
 - !policy
-  id: /authn-jwt/GitwithJWT4
+  id: GitwithJWT5
   body:
     - !webservice
     - !variable
