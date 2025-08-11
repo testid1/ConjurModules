@@ -70,17 +70,18 @@ jobs:
           fi
           
           Onboard_policy=$(curl -s -k -X PATCH \
-          "$CONJUR_URL/policies/conjur/policy" \
+          "$CONJUR_URL/policies/conjur/policy/conjur" \
           -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
           -H "Content-Type: application/json" \
           --data-binary "conjur-policies/GitwithJWT5.yml" )
-        
+          
+          echo "Onboarding response : $Onboard_policy"
           echo "resp=$Onboard_policy" >> $GITHUB_OUTPUT
-          echo $Onboard_policy" > secret_value.txt
-          echo "Policy Reponse: $Onboard_policy"
+       #   echo $Onboard_policy" > secret_value.txt
+       #   echo "Policy Reponse: $Onboard_policy"
 
-      - name: Upload raw secret as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw-secret
-          path: secret.txt
+      #- name: Upload raw secret as an artifact
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: raw-secret
+      #    path: secret.txt
