@@ -1,0 +1,87 @@
+#Reusable module for Conjur Onboarding
+name: Conjur-Onboarding
+
+on:
+  #workflow_call:
+  #  inputs:
+  #    secretpath:
+  #      description: "Target Variable"
+  #      required: true
+  #      type: string
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  conjur-onboarding:
+    runs-on: ubuntu-latest
+
+    env:
+      CONJUR_URL: ${{ secrets.CONJUR_URL }}
+      CONJUR_ACCOUNT: conjur
+      CONJUR_ID: ${{ secrets.CONJUR_ID }}
+      CONJUR_API_KEY: ${{ secrets.CONJUR_API_KEY }}
+
+    steps:
+      - name: Debug OIDC environment variables
+        run: |
+          echo "Token: $ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+          echo "URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
+
+      - name: Request JWT from GitHub
+        id: jwt
+        run: |
+          RESPONSE=$(curl -s -X POST \
+          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          -H "Accept: application/json" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL")
+          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          JWT=$(echo "$RESPONSE" | jq -r .value)
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
+          echo "jwt token:$JWT"
+          echo "JWT length: ${#JWT}"
+
+
+      - name: Authenticate to Conjur
+        id: conjur_auth
+        run: |
+          CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
+          SESSION_TOKEN=$(curl -s -k --request POST \
+          --data "jwt=${{ steps.jwt.outputs.jwt }}" \
+          "$CONJUR_URL/authn-jwt/JWTwithGITHUB/conjur/authenticate" \
+          | base64 | tr -d '\r\n')
+          echo "session_token=$SESSION_TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Onboard-Policy
+        shell: bash
+        env:
+          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
+          CONJUR_ACCOUNT: "conjur"
+        run: |
+          set -x
+          echo "Running till here"
+          SESSION_TOKEN=${{ steps.conjur_auth.outputs.session_token }}
+
+          if [ -z "$SESSION_TOKEN" ]; then
+            echo "Error: SESSION_TOKEN is empty"
+            exit 1
+          fi
+          
+          Onboard_policy=$(curl -s -k -X PATCH \
+          "$CONJUR_URL/policies/conjur/policy/conjur" \
+          -H "Authorization: Token token=\"$SESSION_TOKEN\"" \
+          -H "Content-Type: application/json" \
+          --data-binary "conjur-policies/GitwithJWT5.yml" )
+          
+          echo "Onboarding response : $Onboard_policy"
+          echo "resp=$Onboard_policy" >> $GITHUB_OUTPUT
+       #   echo $Onboard_policy" > secret_value.txt
+       #   echo "Policy Reponse: $Onboard_policy"
+
+      #- name: Upload raw secret as an artifact
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: raw-secret
+      #    path:
