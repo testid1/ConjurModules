@@ -74,13 +74,24 @@ jobs:
 
           echo "secret_value=$SECRET_VALUE" >> "$GITHUB_OUTPUT"
 
-      - name: Update .github/Actions/secrets.json
-        shell: bash
+      
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Verify paths and contents
         run: |
+          echo "Working directory: $GITHUB_WORKSPACE"
+          ls -R .github/Actions || echo "Path not found"
+
+      - name: Update secrets.json with secret value
+        id: update_json
+        run: |
+          SECRET_VALUE="${{ steps.retrieve.outputs.secret_value }}"
+          echo "::add-mask::$SECRET_VALUE"
           json_path=".github/Actions/secrets.json"
           tmp="$(mktemp)"
-          jq --arg v "${{ steps.retrieve.outputs.secret_value }}" '.mySecret = $v' "$json_path" > "$tmp"
-          mv "$tmp" "$json_path"
+          jq --arg v "$SECRET_VALUE" '.mySecret = $v' "$GITHUB_WORKSPACE/$json_path" > "$tmp"
+          mv "$tmp" "$GITHUB_WORKSPACE/$json_path"
 
       - name: Commit and push changes
         shell: bash
