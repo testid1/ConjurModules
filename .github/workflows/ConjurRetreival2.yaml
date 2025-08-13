@@ -63,13 +63,15 @@ jobs:
         shell: bash
         env:
           CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
+          CONJUR_ACCOUNT: "conjur"
         run: |
+          set -x
+          echo "Running till here"
           SESSION_TOKEN="$(cat session_token.txt)"
           SECRET_VALUE=$(curl -s -k \
             --header "Authorization: Token token=\"$SESSION_TOKEN\"" \
             "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
 
-          echo "::add-mask::$SECRET_VALUE"
           echo "secret_value=$SECRET_VALUE" >> "$GITHUB_OUTPUT"
 
       - name: Write secret into JSON file
