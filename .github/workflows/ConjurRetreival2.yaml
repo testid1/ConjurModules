@@ -74,20 +74,37 @@ jobs:
 
           echo "secret_value=$SECRET_VALUE" >> "$GITHUB_OUTPUT"
 
-      - name: Write secret into JSON file
+      - name: Update .github/Actions/secrets.json
         shell: bash
         run: |
-          cat <<EOF > secret.json
-          {
-            "mySecret": "${{ steps.retrieve.outputs.secret_value }}"
-          }
-          EOF
+          json_path=".github/Actions/secrets.json"
+          tmp="$(mktemp)"
+          jq --arg v "${{ steps.retrieve.outputs.secret_value }}" '.mySecret = $v' "$json_path" > "$tmp"
+          mv "$tmp" "$json_path"
 
-      - name: Upload secret.json as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: secret-json
-          path: secret.json
+      - name: Commit and push changes
+        shell: bash
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .github/Actions/secrets.json
+          git commit -m "Update secrets.json (mySecret) via workflow" || echo "No changes to commit"
+          git push
+
+#      - name: Write secret into JSON file
+#        shell: bash
+#        run: |
+#          cat <<EOF > secret.json
+#          {
+#            "mySecret": "${{ steps.retrieve.outputs.secret_value }}"
+#          }
+#          EOF
+
+#      - name: Upload secret.json as an artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: secret-json
+#          path: secret.json
 #          printf '%s' "${{ steps.retrieve.outputs.secret_value }}" \
 #            | jq -Rs --arg key mySecret '{($key): .}' > secret.json
 
