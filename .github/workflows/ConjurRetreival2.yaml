@@ -77,8 +77,13 @@ jobs:
       - name: Write secret into JSON file
         shell: bash
         run: |
-          printf '%s' "${{ steps.retrieve.outputs.secret_value }}" \
-            | jq -Rs --arg key mySecret '{($key): .}' > secret.json
+          cat <<EOF > secret.json
+          {
+            "mySecret": "${{ steps.retrieve.outputs.secret_value }}"
+          }
+          EOF
+#          printf '%s' "${{ steps.retrieve.outputs.secret_value }}" \
+#            | jq -Rs --arg key mySecret '{($key): .}' > secret.json
 
 #      - name: Retrieve to Conjur
 #        shell: bash
