@@ -57,40 +57,55 @@ jobs:
           name: raw-st
           path: session_token.txt
 
-      - name: Retrieve to Conjur
+      
+      - name: Retrieve secret from Conjur
+        id: retrieve
         shell: bash
         env:
           CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
-          CONJUR_ACCOUNT: "conjur"
         run: |
-          set -x
-          echo "Running till here"
-          SESSION_TOKEN=$(cat session_token.txt)
-          if [ -z "$SESSION_TOKEN" ]; then
-            echo "Error: SESSION_TOKEN is empty"
-            exit 1
-          fi
-          VAR="data/vault/conjurtest/conjurtest/address"
-          SECRET_VALUE=$(curl -s -k --header "Authorization: Token token=\"$SESSION_TOKEN\"" \
-          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
-          echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
-          echo "$SECRET_VALUE" > secret_value.txt
-          echo "Secret:$SECRET_VALUE"
+          SESSION_TOKEN="$(cat session_token.txt)"
+          SECRET_VALUE=$(curl -s -k \
+            --header "Authorization: Token token=\"$SESSION_TOKEN\"" \
+            "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
 
-      - name: Upload raw secret as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw-secret
-          path: secret.txt
+          echo "::add-mask::$SECRET_VALUE"
+          echo "secret_value=$SECRET_VALUE" >> "$GITHUB_OUTPUT"
 
-      - name: Write secret to JSON file
+      - name: Write secret into JSON file
         shell: bash
         run: |
-          cat <<EOF > secret.json
-          {
-              "mySecret": "${{ steps.retrieve-secret.outputs.secret_value }}"
-          }
-          EOF
+          printf '%s' "${{ steps.retrieve.outputs.secret_value }}" \
+            | jq -Rs --arg key mySecret '{($key): .}' > secret.json
+
+#      - name: Retrieve to Conjur
+#        shell: bash
+#        env:
+#          CONJUR_URL: "https://pwclab.secretsmgr.cyberark.cloud/api"
+#          CONJUR_ACCOUNT: "conjur"
+#        run: |
+#          set -x
+#          echo "Running till here"
+#          SESSION_TOKEN=$(cat session_token.txt)
+#          if [ -z "$SESSION_TOKEN" ]; then
+#            echo "Error: SESSION_TOKEN is empty"
+#            exit 1
+#          fi
+#          VAR="data/vault/conjurtest/conjurtest/address"
+#          SECRET_VALUE=$(curl -s -k --header "Authorization: Token token=\"$SESSION_TOKEN\"" \
+#          "$CONJUR_URL/secrets/conjur/variable/data%2Fvault%2Fconjurtest%2Fconjurtest%2Fpassword")
+#          echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
+#          echo "$SECRET_VALUE" > secret_value.txt
+#          echo "Secret:$SECRET_VALUE"
+
+#      - name: Write secret to JSON file
+#        shell: bash
+#        run: |
+#          cat <<EOF > secret.json
+#          {
+#              "mySecret": "${{ steps.retrieve-secret.outputs.secret_value }}"
+#          }
+#          EOF
  #     - name: Retreive Secret
  #       run:  |
  #         CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
