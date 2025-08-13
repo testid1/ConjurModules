@@ -82,6 +82,12 @@ jobs:
             "mySecret": "${{ steps.retrieve.outputs.secret_value }}"
           }
           EOF
+
+      - name: Upload secret.json as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: secret-json
+          path: secret.json
 #          printf '%s' "${{ steps.retrieve.outputs.secret_value }}" \
 #            | jq -Rs --arg key mySecret '{($key): .}' > secret.json
 
