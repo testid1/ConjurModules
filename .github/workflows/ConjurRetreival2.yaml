@@ -82,6 +82,15 @@ jobs:
         with:
           name: raw-secret
           path: secret.txt
+
+      - name: Write secret to JSON file
+        shell: bash
+        run: |
+          cat <<EOF > secret.json
+          {
+              "mySecret": "${{ steps.retrieve-secret.outputs.secret_value }}"
+          }
+          EOF
  #     - name: Retreive Secret
  #       run:  |
  #         CONJUR_URL="https://pwclab.secretsmgr.cyberark.cloud/api"
