@@ -85,6 +85,7 @@ jobs:
           echo "Secret=$SECRET_VALUE" >> $GITHUB_OUTPUT
           echo "$SECRET_VALUE" > secret_value.txt
           echo "Secret:$SECRET_VALUE"
+          echo "Testing=$SECRET_VALUE" >> $GITHUB_ENV
 
       - name: Upload raw secret as an artifact
         uses: actions/upload-artifact@v4
